@@ -1,23 +1,36 @@
 'strict';
 
-// *** MODEL ***
-let todos = [
-	{
-		title: 'Get groceries',
-		dueDate: '2021-10-04',
-		id: 'id1'
-	},
-	{
-		title: 'Wash car',
-		dueDate: '2021-02-25',
-		id: 'id2'
-	},
-	{
-		title: 'Make dinner',
-		dueDate: '2021-03-04',
-		id: 'id3'
-	}
-];
+// ***** MODEL *****
+
+// If localStorage has a todos array, then use it
+// Otherwise use the default array
+let todos;
+
+//Retrieve localStorage
+const savedTodos = JSON.parse(localStorage.getItem('todos'));
+
+//Check if it's an array
+if (Array.isArray(savedTodos)) {
+	todos = savedTodos;
+} else {
+	[
+		{
+			title: 'Get groceries',
+			dueDate: '2021-10-04',
+			id: 'id1'
+		},
+		{
+			title: 'Wash car',
+			dueDate: '2021-02-25',
+			id: 'id2'
+		},
+		{
+			title: 'Make dinner',
+			dueDate: '2021-03-04',
+			id: 'id3'
+		}
+	];
+}
 
 // Creates a todo
 function createTodo(title, dueDate) {
@@ -30,6 +43,8 @@ function createTodo(title, dueDate) {
 		dueDate: dueDate,
 		id: id
 	});
+
+	saveTodos();
 }
 
 // Deletes a todo
@@ -43,10 +58,16 @@ function removeTodo(idToDelete) {
 			return true;
 		}
 	});
-}
-// *** END MODEL ***
 
-// *** CONTROLLER ***
+	saveTodos();
+}
+
+function saveTodos() {
+	localStorage.setItem('todos', JSON.stringify(todos));
+}
+// ***** END MODEL *****
+
+// ***** CONTROLLER *****
 function addTodo() {
 	const textInput = document.getElementById('todo-title');
 	const title = textInput.value;
@@ -65,9 +86,9 @@ function deleteTodo(event) {
 	removeTodo(idToDelete);
 	render();
 }
-// *** END CONTROLLER ***
+// ***** END CONTROLLER *****
 
-// *** VIEW ***
+// ***** VIEW *****
 function render() {
 	// reset our list
 	document.getElementById('todo-list').innerHTML = '';
@@ -89,4 +110,4 @@ function render() {
 }
 
 render();
-// *** END VIEW ***
+// ***** END VIEW *****
